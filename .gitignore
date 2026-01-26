@@ -1,0 +1,6 @@
+*.o
+*.out
+*.elf
+*.debug
+*.lst
+.gdb_history
