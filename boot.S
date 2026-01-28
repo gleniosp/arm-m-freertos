@@ -1,9 +1,10 @@
     .section .vectors
 vector_table:
-    /* This might be loaded in the stack pointer as 0xabcc when the CPU boots up (and debugging it with GDB),
-    because it should be an address closest to a multiple of 4, as the Cortex M3 used by this project uses
-    32-bit (4 bytes) CPU registers for operations. */
-    .word 0xabcd
+    /*
+        __stack is defined in the `map.ld` file. It's the address corresponding to the start of the SRAM for our
+        Cortex M3 CPU + 8 KB (total SRAM memory) - 4 (just to be safe and don't write at something that doesn't exist).
+    */
+    .word __stack
     .word reset_handler
     .zero 400
 
