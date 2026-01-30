@@ -2,7 +2,12 @@ PROJ = main
 CPU ?= cortex-m3
 BOARD ?= stm32vldiscovery
 
+FREERTOS_PATH = ../FreeRTOS-Kernel
+
 OBJ = boot.o start.o
+
+INC = -I$(FREERTOS_PATH)/include/ \
+	  -I./
 
 .PHONY: all
 all: $(PROJ).elf
@@ -11,7 +16,7 @@ all: $(PROJ).elf
 	arm-none-eabi-as -mthumb -mcpu=$(CPU) -g -c $^ -o $@
 
 %.o: %.c
-	arm-none-eabi-gcc -mthumb -mcpu=$(CPU) -g -c $^ -o $@
+	arm-none-eabi-gcc $(INC) -mthumb -mcpu=$(CPU) -g -c $^ -o $@
 
 $(PROJ).elf: $(OBJ)
 	arm-none-eabi-ld -Tmap.ld $^ -o $@

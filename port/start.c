@@ -1,8 +1,7 @@
-void glenio() {
-    return;
-}
+#include "FreeRTOS.h"
+#include "task.h"
 
 void start() {
-    glenio();
+    vTaskStartScheduler();
     return;
 }
