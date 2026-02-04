@@ -4,7 +4,11 @@ BOARD ?= stm32vldiscovery
 
 FREERTOS_PATH = ../FreeRTOS-Kernel
 
-OBJ = boot.o start.o
+OBJ = boot.o \
+	  start.o \
+	  portFunctions.o \
+	  $(FREERTOS_PATH)/tasks.o \
+	  $(FREERTOS_PATH)/portable/MemMang/heap_4.o \
 
 INC = -I$(FREERTOS_PATH)/portable/GCC/ARM_CM3/ \
       -I$(FREERTOS_PATH)/include/ \
