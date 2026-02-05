@@ -9,5 +9,7 @@
 #define configUSE_IDLE_HOOK  0
 #define configUSE_TICK_HOOK  0
 #define configTOTAL_HEAP_SIZE  0x1000 // total = 4 KB
+#define configCPU_CLOCK_HZ  8000000 // 8 MHz
+#define configTICK_RATE_HZ  10 // 10 Hz
 
 #endif
