@@ -4,7 +4,8 @@
 
 - `make gdb` to use GDB to debug the code running on QEMU
 
-As an alternative, after running QEMU, you can use the VS Code interface to debug with GDB.
+As an alternative, after running QEMU, you can use the VS Code interface to debug with GDB. JUST BEAR IN MIND THAT
+VS Code MIGHT NOT BE ABLE TO STEP INTO ASSEMBLY INSTRUCTIONS THAT MIGHT SHOW IN THE FREERTOS KERNEL, LIKE IN THE `prvPortStartFirstTask` FUNCTION (LINE 247, PATH: FreeRTOS-Kernel -> portable -> GCC -> ARM_CM3 -> port.c). IN THIS CASE IT'S BETTER TO USE THE GDB IN THE COMMAND LINE.
 Just go to the 'Debug' icon on the left, above the 'Extensions' icon, and run using the pre-configured `GDB` launcher,
 which is provided by the `.vscode/launch.json` file.
 
