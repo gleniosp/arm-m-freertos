@@ -22,10 +22,10 @@ vector_table:
     .word default
     .word default
     .word default
+    .word vPortSVCHandler
     .word default
     .word default
-    .word default
-    .word default
+    .word xPortPendSVHandler
     // the 15th interrupt is for SysTick, in the vector table
     .word xPortSysTickHandler
     .zero 400
