@@ -37,5 +37,34 @@ To run on real hardware, you'll need:
     - Once the code is compiled, `main.elf` will be available.
     - `arm-none-eabi-objcopy -O binary main.elf main.bin`.
     - The binary `main.bin` is now available in the container workspace and consequently in your local workspace as well, in the `port` folder.
-- Now, flash `main.bin` into the board with using one of the `stlink-tools`:
+- Now, connect the board to the PC via USB and flash `main.bin` into the board with using one of the `stlink-tools`:
   - `sudo st-flash write main.bin 0x08000000` (same address as the FLASH ORIGIN in the linker script)
+- To debug with VS Code:
+  - Go the local workspace with the `port` and `FreeRTOS-Kernel`
+  - Create a `.vscode/launch.json` file and use the same config as in this `arm-m-freertos` repository
+  - Start the GDB server with `sudo st-util` (the board should be connected to the PC)
+    - The GDB server will print the listening port, something like `*:4242`.
+  - Then, go to the `.vscode/launch.json` and change the line `"miDebuggerServerAddress": "127.0.0.1:1234"` to `"miDebuggerServerAddress": "127.0.0.1:4242"`, if that's the case.
+    - You may also need to update the `miDebuggerPath` to the proper `gdb` command line tool path in the local machine
+  - Then, launch the `GDB` config in the Debug screen (the icon above the extensions icon in the left sidebar of VS Code)
+  - Put breakpoints in the `port/start.c` function to see it pausing there, for example, within the tasks `vTask1` and `vTask2`.
+- To debug with GDB in the command line:
+  - Go the `port` folder in the local workspace
+  - Make sure if you have installed the GDB dashboard: https://github.com/cyrus-and/gdb-dashboard. Essentially:
+    - `wget -P ~ https://github.com/cyrus-and/gdb-dashboard/raw/master/.gdbinit`
+    - `pip install pygments` (for syntax highlighting)
+  - Run `gdb main.elf` (main.elf is the one with the debug symbols)
+  - In another terminal, run the GDB server with `sudo st-util` (the board should be connected to the PC)
+  - The GDB server will print the listening port, something like `*:4242`.
+  - Go back to the terminal which has the `gdb` command running and is now accepting commands, and run: `target remote localhost:4242`
+  - Then you can use GDB commands normally to debug the code. For example:
+    - Put a breakpoint for the symbol `xPortStartScheduler` (which is used in `port/start.c`) with: `b xPortStartScheduler`
+    - Then, run you tell GDB that is a remote target and you want to reset it and halt it with: `monitor reset halt`
+    - Then, you can continue the program execution with: `c`
+    - The program will then stop inside the breakpoint function, `xPortStartScheduler`, and halt.
+    - Then, run `c` again to continue
+    - GDB will simply continue to execute the program and it'll simply show a mostly empty screen with `Output/messages` title.
+      - This is because the program is simply running in its infinite loop now, without breakpoints, and alternating between the `vTask1` and `vTask2` tasks that we created in `port/start.c`.
+      - If you press `Ctrl + c` within GDB, it'll pause the program/CPU and you'll see it paused within one these tasks.
+      - Send `c` again and the programs goes back running in the infinite loop
+      - Press `Ctrl + c` again and it'll pause again...and so on and so forth.
